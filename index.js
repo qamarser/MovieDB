@@ -108,6 +108,30 @@ app.delete('/movies/delete/:id', (req, res) => {
     res.status(200).json({ status: 200, data: movies });
 });
 
+app.get('/movies/read/by-date', (req, res) => {
+    const sortedMovies = [...movies].sort((a, b) => a.year - b.year);
+    res.status(200).json({
+        status: 200,
+        data: sortedMovies
+    });
+});
+
+app.get('/movies/read/by-rating', (req, res) => {
+    const sortedMovies = [...movies].sort((a, b) => b.rating - a.rating);
+    res.status(200).json({
+        status: 200,
+        data: sortedMovies
+    });
+});
+
+app.get('/movies/read/by-title', (req, res) => {
+    const sortedMovies = [...movies].sort((a, b) => a.title.localeCompare(b.title));
+    res.status(200).json({
+        status: 200,
+        data: sortedMovies
+    });
+});
+
 
 // how to make index.js to open the browser -whenever running npm run dev:(ask e ma zobtet me3e)
 app.listen(port, () => {
