@@ -150,7 +150,45 @@ app.get('/movies/read/id/:id', (req, res) => {
     }
 });
 
-// how to make index.js to open the browser -whenever running npm run dev:(ask e ma zobtet me3e)
+
+
+// Route to Add a New Movie (Create)
+app.get('/movies/add', (req, res) => {
+    const { title, year, rating } = req.query; // Get query parameters
+    
+    // Validate that 'title' and 'year' are provided
+    if (!title || !year || isNaN(year) || year.length !== 4) {
+      return res.status(403).send({
+        status: 403,
+        error: true,
+        message: 'You cannot create a movie without providing a valid title and year'
+      });
+    }
+  
+    // Set default rating if not provided
+    const newRating = rating ? parseFloat(rating) : 4; // Default rating to 4 if not provided
+  // ? operator in this line is part of a ternary conditional operator, which is a shorthand way to perform an if-else statement.
+    // Create a new movie object
+    const newMovie = {
+      title: title,
+      year: parseInt(year), // Ensure the year is an integer
+      rating: newRating
+    };
+  
+    // Add the new movie to the movies array
+    movies.push(newMovie);
+  
+    // Respond with the updated list of movies
+    res.send({ status: 200, data: movies });
+  });
+
+
+
+
+
+
+
+  // how to make index.js to open the browser -whenever running npm run dev:(ask e ma zobtet me3e)
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
     //  open.default(`http://localhost:${port}`);  // This will open the default browser automatically
