@@ -184,6 +184,29 @@ app.get('/movies/add', (req, res) => {
 
 
 
+// Route to Delete a Movie (Delete)
+app.get('/movies/delete/:id', (req, res) => {
+    const movieId = parseInt(req.params.id); // Get movie ID from the URL
+  
+    // Find the index of the movie with the given ID
+    const movieIndex = movies.findIndex(movie => movie.id === movieId); //findIndex() is a method that searches the array for the first element that matches the condition
+  
+    // If movie with the given ID doesn't exist, return a 404 error
+    if (movieIndex === -1) {
+      return res.status(404).send({
+        status: 404,
+        error: true,
+        message: `The movie with ID ${movieId} does not exist`
+      });
+    }
+  
+    // If movie exists, remove it from the array
+    movies.splice(movieIndex, 1); //1 indicates that only one element (the movie) should be removed
+  
+    // Respond with the updated list of movies
+    res.send({ status: 200, data: movies });
+  });
+  
 
 
 
