@@ -32,7 +32,7 @@ app.get('/time', (req, res)=>{
 
 //step 4 
 app.get('/Hello/:id', (req, res)=>{
-    const id = req.params.id || 'login'; // req.params.id = get the id from the url
+    const id = req.params.id || " "; // req.params.id = get the id from the url
     res.json({status:200, message:`Hello, ${id}`}); //res.json = send data back to the user in json format
 });
 
@@ -44,6 +44,71 @@ app.get('/search',(req,res) => {
         res.status(500).json({ status: 500, error: true, message: "You have to provide a search" });
     }
 })
+
+//movie array
+const movies = [
+    { title: 'Jaws', year: 1975, rating: 8 },
+    { title: 'Avatar', year: 2009, rating: 7.8 },
+    { title: 'Brazil', year: 1985, rating: 8 },
+    { title: 'الإرهاب والكباب', year: 1992, rating: 6.2 }
+  ];
+
+  //routers foe movie
+
+  // Route for creating a new movie (will be implemented later)
+  app.post('/movies/create', (req, res) => {
+    const { title, year, rating } = req.body; //req.body: contains the data sent by the client (user) as part of the HTTP request.
+
+    if (!title || !year || typeof year !== 'number' || year.toString().length !== 4) {
+        //If validation fails, the server responds 
+        return res.status(400).json({ status: 400, error: true, message: 'Invalid movie data' }); 
+    }
+
+    const newMovie = { title, year, rating: rating || 4 };
+    movies.push(newMovie); //Add the New Movie to the Array
+
+    res.status(201).json({ status: 201, data: movies }); //created successfully
+});
+
+//Returns the full list of movies as a JSON response.
+app.get('/movie/read', (req, res) =>{ 
+    res.status(200).json({status:200, data:movies}); 
+})
+
+// Route for updating a movie
+app.put('/movies/update/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10); // Extracting the id Parameter
+    const { title, year, rating } = req.body; //Extracting Data from the Request Body
+
+    // Check if the 'id' is valid
+    if (id < 0 || id >= movies.length) {
+        return res.status(404).json({ status: 404, error: true, message: 'Movie not found' });
+    }
+    /*id >= 0: The ID cannot be negative.
+     id < movies.length: The ID must be within the valid range of the movies array 
+      indexes.*/
+
+    const movie = movies[id]; // Fetching the Movie to Update
+    if (title) movie.title = title;
+    if (year && typeof year === 'number' && year.toString().length === 4) movie.year = year;
+    if (rating && typeof rating === 'number') movie.rating = rating;
+
+    res.status(200).json({ status: 200, data: movies });
+});
+
+//delete movie 
+app.delete('/movies/delete/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+
+    if (id < 0 || id >= movies.length) {
+        return res.status(404).json({ status: 404, error: true, message: 'Movie not found' });
+    }
+
+    movies.splice(id, 1); //Removes 1 item from the movies array at the specified index (id).
+    res.status(200).json({ status: 200, data: movies });
+});
+
+
 // how to make index.js to open the browser -whenever running npm run dev:(ask e ma zobtet me3e)
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
