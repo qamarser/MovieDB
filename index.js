@@ -28,13 +28,25 @@ app.get('/time', (req, res)=>{
     res.json({
         status:200, message: time
      })
+});
+
+//step 4 
+app.get('/Hello/:id', (req, res)=>{
+    const id = req.params.id || 'login'; // req.params.id = get the id from the url
+    res.json({status:200, message:`Hello, ${id}`}); //res.json = send data back to the user in json format
+});
+
+app.get('/search',(req,res) => {
+    const searchQuery = req.query.s; // req.query.s = get the query from the url (Capture the query parameter 's')
+    if (searchQuery){
+        res.json({status:200, message:"ok", data:searchQuery});
+    } else {
+        res.status(500).json({ status: 500, error: true, message: "You have to provide a search" });
+    }
 })
-
-
-
 // how to make index.js to open the browser -whenever running npm run dev:(ask e ma zobtet me3e)
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
     //  open.default(`http://localhost:${port}`);  // This will open the default browser automatically
-  })
+  });
   
