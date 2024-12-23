@@ -132,6 +132,23 @@ app.get('/movies/read/by-title', (req, res) => {
     });
 });
 
+// Route: Read a Movie by ID
+app.get('/movies/read/id/:id', (req, res) => {
+    const movieId = parseInt(req.params.id, 10); // Convert ID to an integer
+
+    if (movieId >= 0 && movieId < movies.length) {
+        res.status(200).json({
+            status: 200,
+            data: movies[movieId]
+        });
+    } else {
+        res.status(404).json({
+            status: 404,
+            error: true,
+            message: `The movie with ID ${movieId} does not exist.`
+        });
+    }
+});
 
 // how to make index.js to open the browser -whenever running npm run dev:(ask e ma zobtet me3e)
 app.listen(port, () => {
